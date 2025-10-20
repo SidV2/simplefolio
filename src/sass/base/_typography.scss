@@ -1,24 +1,4 @@
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Montserrat Regular'),
-       local('Montserrat-Regular'),
-       url('https://fonts.gstatic.com/s/montserrat/v15/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2') format('woff2'),
-       url('https://fonts.gstatic.com/s/montserrat/v15/JTUSjIg1_i6t8kCHKm459WlhyyTh89ZNXv.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: local('Montserrat Bold'),
-       local('Montserrat-Bold'),
-       url('https://fonts.gstatic.com/s/montserrat/v15/JTUSjIg1_i6t8kCHKm459W1hyyTh89Y.woff2') format('woff2'),
-       url('https://fonts.gstatic.com/s/montserrat/v15/JTUSjIg1_i6t8kCHKm459W1hyyTh89ZNXv.woff') format('woff');
-}
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
 
 h1 {
   font-weight: 700;
@@ -26,6 +6,7 @@ h1 {
 
 p,
 a {
+  font-family: "Montserrat", sans-serif;
   font-size: $default-font-size;
 }
 
