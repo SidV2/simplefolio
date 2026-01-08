@@ -1,6 +1,7 @@
-import initScrollReveal from "./scripts/scrollReveal";
-import initTiltEffect from "./scripts/tiltAnimation";
-import { targetElements, defaultProps } from "./data/scrollRevealConfig";
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import './styles.scss';
 
-initScrollReveal(targetElements, defaultProps);
-initTiltEffect();
+const root = createRoot(document.getElementById('root'));
+root.render(<App />);
