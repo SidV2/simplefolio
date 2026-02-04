@@ -9,6 +9,33 @@
     <meta name="keywords" content="[SidV2], [Sidhartha Verma], javascript" />
     <meta name="description" content="[Your name here] | Developer" />
 
+    <!-- Critical CSS - inlined for fast LCP -->
+    <style>
+      html{font-size:62.5%}
+      html.sr .load-hidden{visibility:hidden}
+      body{font-family:"Montserrat",sans-serif;text-align:center;margin:0}
+      h1{font-weight:700}
+      a,a:link,a:hover,a:visited,a:active{text-decoration:none}
+      #hero{min-height:100vh;height:100vh;display:flex;align-items:center;background:#fff;font-weight:400;color:#272341;padding:0 5.6rem;margin-bottom:0}
+      .hero-title{font-size:5.6rem;font-weight:700;margin-bottom:3.2rem;text-align:left}
+      .hero-cta{display:flex}
+      .hero-cta a{font-size:2.4rem}
+      .text-color-main{color:#00cdac;-webkit-text-fill-color:#00cdac}
+      @supports ((-webkit-background-clip:text) or (background-clip:text)){
+        .text-color-main{background-image:linear-gradient(135deg,#02aab0 0%,#00cdac 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+      }
+      .cta-btn{display:inline-block;position:relative;padding:.8rem 1.6rem;font-weight:700;line-height:1;z-index:1;transition:all cubic-bezier(.19,1,.22,1) .6s}
+      .cta-btn::after{content:"";display:block;position:absolute;width:0;height:100%;left:0;bottom:0;z-index:-1;transition:all cubic-bezier(.19,1,.22,1) .3s}
+      .cta-btn--hero{color:#00cdac;-webkit-text-fill-color:#00cdac;border:2px solid;border-image:linear-gradient(135deg,#02aab0 0%,#00cdac 100%) 1}
+      .cta-btn--hero::after{background-image:linear-gradient(135deg,#02aab0 0%,#00cdac 100%)}
+      .cta-btn--hero:hover{-webkit-text-fill-color:#fff}
+      .cta-btn--hero:hover::after{width:100%}
+      @media (max-width:75em){.hero-title{font-size:4rem}}
+      @media (max-width:56.25em){.hero-title{font-size:3.6rem;text-align:center}.hero-cta{justify-content:center}}
+      @media (max-width:37.5em){#hero{padding:0 1.6rem}.hero-title{font-size:3.5rem;line-height:1.5}.hero-cta a{font-size:2rem}.text-color-main{background-image:none;-webkit-text-fill-color:#00cdac}.cta-btn--hero{background-image:none;border:2px solid #00cdac;-webkit-text-fill-color:#00cdac}.cta-btn--hero::after{background-image:none}.cta-btn--hero:hover{-webkit-text-fill-color:#00cdac}}
+      @media (max-width:20em){.hero-title{font-size:2.8rem}}
+    </style>
+
     <!-- Google Fonts - async loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
