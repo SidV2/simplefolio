@@ -6,7 +6,7 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build && node scripts/async-css.js"
+    "build": "parcel build"
   },
   "repository": {
     "type": "git",
