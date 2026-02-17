@@ -5,78 +5,82 @@ import VanillaTilt from 'vanilla-tilt';
 function Projects() {
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 3;
-  const previousCountRef = useRef(0); // Track previous project count
-  
-  const startIndex = 0;
+  const previousCountRef = useRef(0);
+  const projectRefs = useRef([]);
+
   const endIndex = currentPage * projectsPerPage;
-  const displayedProjects = projectsData.slice(startIndex, endIndex);
+  const displayedProjects = projectsData.slice(0, endIndex);
   const hasMore = endIndex < projectsData.length;
 
-  // Re-initialize ScrollReveal and Tilt ONLY for new projects
+  // Cleanup tilt instances on unmount
+  useEffect(() => {
+    return () => {
+      projectRefs.current.forEach(el => {
+        if (!el) return;
+        const tiltEl = el.querySelector('.js-tilt');
+        if (tiltEl && tiltEl.vanillaTilt) {
+          tiltEl.vanillaTilt.destroy();
+        }
+      });
+    };
+  }, []);
+
+  // Initialize ScrollReveal and Tilt for new projects only
   useEffect(() => {
     const previousCount = previousCountRef.current;
     const currentCount = displayedProjects.length;
 
-    // Only animate if we have new items
-    if (currentCount > previousCount) {
-      // ScrollReveal for NEW projects only
-      if (typeof window !== 'undefined' && window.ScrollReveal) {
-        const sr = window.ScrollReveal();
-        
-        // Target only newly added elements using data attribute
-        const newElements = document.querySelectorAll(`[data-project-index]`);
-        const newElementsArray = Array.from(newElements).filter((el) => {
-          const index = parseInt(el.getAttribute('data-project-index'));
-          return index >= previousCount;
-        });
-        
-        newElementsArray.forEach((element) => {
-          const textEl = element.querySelector('.project-wrapper__text');
-          const imageEl = element.querySelector('.project-wrapper__image');
-          
-          if (textEl) {
-            sr.reveal(textEl, {
-              distance: '60px',
-              duration: 1000,
-              delay: 200,
-              easing: 'ease-out',
-              origin: 'bottom',
-              reset: false
-            });
-          }
-          
-          if (imageEl) {
-            sr.reveal(imageEl, {
-              distance: '60px',
-              duration: 1000,
-              delay: 400, // Slight delay after text
-              easing: 'ease-out',
-              origin: 'bottom',
-              reset: false
-            });
-          }
-        });
-      }
+    if (currentCount <= previousCount) return;
 
-      // Initialize Tilt for ALL elements (but destroy first to avoid duplicates)
-      const tiltElements = document.querySelectorAll('.js-tilt');
-      if (tiltElements.length > 0) {
-        tiltElements.forEach((element) => {
-          if (element.vanillaTilt) {
-            element.vanillaTilt.destroy();
-          }
-        });
-        
-        VanillaTilt.init(tiltElements, {
+    if (typeof window !== 'undefined' && window.ScrollReveal) {
+      const sr = window.ScrollReveal();
+
+      for (let i = previousCount; i < currentCount; i++) {
+        const element = projectRefs.current[i];
+        if (!element) continue;
+
+        const textEl = element.querySelector('.project-wrapper__text');
+        const imageEl = element.querySelector('.project-wrapper__image');
+
+        if (textEl) {
+          sr.reveal(textEl, {
+            distance: '60px',
+            duration: 1000,
+            delay: 200,
+            easing: 'ease-out',
+            origin: 'bottom',
+            reset: false
+          });
+        }
+
+        if (imageEl) {
+          sr.reveal(imageEl, {
+            distance: '60px',
+            duration: 1000,
+            delay: 400,
+            easing: 'ease-out',
+            origin: 'bottom',
+            reset: false
+          });
+        }
+      }
+    }
+
+    // Initialize Tilt only for new elements
+    for (let i = previousCount; i < currentCount; i++) {
+      const element = projectRefs.current[i];
+      if (!element) continue;
+      const tiltEl = element.querySelector('.js-tilt');
+      if (tiltEl) {
+        VanillaTilt.init([tiltEl], {
           max: 4,
           glare: true,
           'max-glare': 0.5
         });
       }
-
-      // Update the previous count
-      previousCountRef.current = currentCount;
     }
+
+    previousCountRef.current = currentCount;
   }, [displayedProjects.length]);
 
   const handleLoadMore = () => {
@@ -92,13 +96,13 @@ function Projects() {
           <div className="projects-list">
             {displayedProjects.map((project, index) => {
               const isNewItem = index >= previousCountRef.current;
-              
+
               return (
-                <div 
-                  key={project.id} 
-                  className="row" 
+                <div
+                  key={project.id}
+                  ref={el => { projectRefs.current[index] = el; }}
+                  className="row"
                   style={{ marginBottom: '4rem' }}
-                  data-project-index={index}
                 >
                   <div className="col-lg-4 col-sm-12">
                     <div className={`project-wrapper__text ${isNewItem ? 'load-hidden' : ''}`}>
@@ -108,7 +112,7 @@ function Projects() {
                       </div>
                       {project.liveUrl && (
                         <a
-                          rel="noreferrer"
+                          rel="noreferrer noopener"
                           target="_blank"
                           className="cta-btn cta-btn--hero"
                           href={project.liveUrl}
@@ -118,7 +122,7 @@ function Projects() {
                       )}
                       {project.githubUrl && (
                         <a
-                          rel="noreferrer"
+                          rel="noreferrer noopener"
                           target="_blank"
                           className={`cta-btn ${!project.liveUrl ? 'cta-btn--hero' : 'text-color-main'}`}
                           href={project.githubUrl}
@@ -130,28 +134,29 @@ function Projects() {
                   </div>
                   <div className="col-lg-8 col-sm-12">
                     <div className={`project-wrapper__image ${isNewItem ? 'load-hidden' : ''}`}>
-                    <a 
-                      rel="noreferrer" 
-                      href={project.liveUrl || project.githubUrl || '#'} 
-                      target="_blank"
-                    >
-                      <div
-                        data-tilt
-                        data-tilt-max="4"
-                        data-tilt-glare="true"
-                        data-tilt-max-glare="0.5"
-                        className="thumbnail rounded js-tilt"
+                      <a
+                        rel="noreferrer noopener"
+                        href={project.liveUrl || project.githubUrl || '#'}
+                        target="_blank"
+                        aria-label={project.title}
                       >
-                        <img
-                          alt={project.title}
-                          className="img-fluid"
-                          src={project.image}
-                        />
-                      </div>
-                    </a>
+                        <div
+                          data-tilt
+                          data-tilt-max="4"
+                          data-tilt-glare="true"
+                          data-tilt-max-glare="0.5"
+                          className="thumbnail rounded js-tilt"
+                        >
+                          <img
+                            alt={project.title}
+                            className="img-fluid"
+                            src={project.image}
+                          />
+                        </div>
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
               );
             })}
           </div>
